@@ -34,7 +34,7 @@ fn string_as_f64<'de, D>(deserializer: D) -> Result<f64, D::Error>
 where
     D: Deserializer<'de>,
 {
-    deserializer.deserialize_f64(F64Visitor)
+    deserializer.deserialize_str(F64Visitor)
 }
 
 struct F64Visitor;
@@ -58,7 +58,7 @@ fn string_as_u32<'de, D>(deserializer: D) -> Result<u32, D::Error>
 where
     D: Deserializer<'de>,
 {
-    deserializer.deserialize_u32(U32Visitor)
+    deserializer.deserialize_str(U32Visitor)
 }
 
 struct U32Visitor;
@@ -78,10 +78,12 @@ impl<'de> Visitor<'de> for U32Visitor {
     }
 }
 
+/// Parses a `Vec<Symbol>` from symbol json
 pub fn parse_symbols(json: String) -> Result<Vec<Symbol>, serde_json::Error> {
     serde_json::from_str(&json)
 }
 
+/// Fetches all symbol data
 pub fn fetch_symbols() -> Vec<Symbol> {
     let mut result: reqwest::Response =
         reqwest::get("https://api.coinmarketcap.com/v1/ticker/?convert=EUR").unwrap();
