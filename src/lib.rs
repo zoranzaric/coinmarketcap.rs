@@ -4,7 +4,6 @@
 //! This is my first Rust library.  I'm releasing this to try the whole Cargo
 //! packaging and relaese workflow.
 
-use std::fmt;
 use std::io::Read;
 
 extern crate serde;
@@ -12,7 +11,8 @@ extern crate serde;
 extern crate serde_derive;
 extern crate serde_json;
 
-use serde::de::{self, Deserializer, Unexpected, Visitor};
+use serde::Deserialize;
+use serde::de::{self, Deserializer, Unexpected};
 
 extern crate reqwest;
 
@@ -34,48 +34,20 @@ fn string_as_f64<'de, D>(deserializer: D) -> Result<f64, D::Error>
 where
     D: Deserializer<'de>,
 {
-    deserializer.deserialize_str(F64Visitor)
-}
-
-struct F64Visitor;
-impl<'de> Visitor<'de> for F64Visitor {
-    type Value = f64;
-    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        formatter.write_str("a string representation of a f64")
-    }
-
-    fn visit_str<E>(self, value: &str) -> Result<f64, E>
-    where
-        E: de::Error,
-    {
-        value.parse::<f64>().map_err(|_err| {
-            E::invalid_value(Unexpected::Str(value), &"a string representation of a f64")
+    let s = String::deserialize(deserializer)?;
+    s.parse::<f64>().map_err(|_err| {
+            de::Error::invalid_value(Unexpected::Str(&s), &"a string representation of a f64")
         })
-    }
 }
 
 fn string_as_u32<'de, D>(deserializer: D) -> Result<u32, D::Error>
 where
     D: Deserializer<'de>,
 {
-    deserializer.deserialize_str(U32Visitor)
-}
-
-struct U32Visitor;
-impl<'de> Visitor<'de> for U32Visitor {
-    type Value = u32;
-    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        formatter.write_str("a string representation of a u32")
-    }
-
-    fn visit_str<E>(self, value: &str) -> Result<u32, E>
-    where
-        E: de::Error,
-    {
-        value.parse::<u32>().map_err(|_err| {
-            E::invalid_value(Unexpected::Str(value), &"a string representation of a u32")
+    let s = String::deserialize(deserializer)?;
+    s.parse::<u32>().map_err(|_err| {
+            de::Error::invalid_value(Unexpected::Str(&s), &"a string representation of a u32")
         })
-    }
 }
 
 /// Parses a `Vec<Symbol>` from symbol json
