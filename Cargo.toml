@@ -1,6 +1,6 @@
 [package]
 name = "coinmarketcap"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Zoran Zaric <zz@zoranzaric.de>"]
 description = "A small unofficial wrapper for the coinmarketcap.com API"
 
