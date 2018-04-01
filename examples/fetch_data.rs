@@ -1,7 +1,9 @@
 extern crate coinmarketcap;
 
 pub fn main() {
-    for symbol in coinmarketcap::fetch_symbols() {
-        println!("{:#?}", symbol);
-    }
+    println!("{:#?}", coinmarketcap::global());
+    
+    // for symbol in coinmarketcap::ticker() {
+    //     println!("{:#?}", symbol);
+    // }
 }
